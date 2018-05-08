@@ -15,12 +15,15 @@ import sys
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'software_installation'))
 
 from spark_agent import SparkAgent
+from spark_agent import Action
 
 
 class MyAgent(SparkAgent):
     def think(self, perception):
         action = super(MyAgent, self).think(perception)
         # YOUR CODE HERE
+	action.stiffness = {'LShoulderPitch': 0, 'RShoulderPitch': 0, 'RKneePitch': 0}
+	action.speed = {'HeadYaw': 0.1}
 
         return action
 
