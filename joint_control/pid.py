@@ -52,10 +52,26 @@ class PIDController(object):
         @param sensor: current values from sensor
         @return control signal
         '''
-        # YOUR CODE HERE
 
+	ctrl_output = self.y
+	prediciton = #TODO
+
+	t_error = target - (prediciton + ctrl_output)
+
+	#u(tk) = u(tk−1)+(Kp+Ki∆t+ Kd )e(tk)−(Kp+2Kd )e(tk−1)+ Kd e(tk−2)
+
+	# Discretized Formula for PID Controller
+	# Source: Lecture
+	ctrl_signal = (self.u) 								# u(tk-1)
+	ctrl_signal += (self.Kp + self.Ki * self.dt + self.Kd / self.dt) * t_error	# (Kp + Ki d_t + Kd/d_t) e(tk)
+	ctrl_signal -= (self.Kp + (2 * self.Kd) / self.dt) * self.e1
+	ctrl_signal += (self.Kd / self.dt) * self.e2
+	
+	# Store next stage errors
+	self.e2 = self.e1
+	self.e1 = t_error
+	self.u = ctrl_signal
         return self.u
-
 
 class PIDAgent(SparkAgent):
     def __init__(self, simspark_ip='localhost',
