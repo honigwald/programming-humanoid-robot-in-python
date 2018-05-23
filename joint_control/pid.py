@@ -34,10 +34,10 @@ class PIDController(object):
         self.e1 = np.zeros(size)
         self.e2 = np.zeros(size)
         # ADJUST PARAMETERS BELOW
-        delay = 0
-        self.Kp = 0
-        self.Ki = 0
-        self.Kd = 0
+        delay = 1
+        self.Kp = 15
+        self.Ki = 0.2
+        self.Kd = 0.3
         self.y = deque(np.zeros(size), maxlen=delay + 1)
 
     def set_delay(self, delay):
@@ -52,27 +52,23 @@ class PIDController(object):
         @param sensor: current values from sensor
         @return control signal
         '''
+        e0 = target - sensor
+        
+        # Discretized Formula for PID Controller
+        # Source: Lecture
+        ctrl_signal = (self.u)
+        ctrl_signal += (self.Kp + self.Ki * self.dt + self.Kd / self.dt) * e0		# P
+        ctrl_signal -= (self.Kp + (2 * self.Kd) / self.dt) * self.e1			# I
+        ctrl_signal += (self.Kd / self.dt) * self.e2					# D
 
-	ctrl_output = self.y
-	prediciton = #TODO
 
-	t_error = target - (prediciton + ctrl_output)
+        # Store next stage errors
+        self.e2 = self.e1
+        self.e1 = e0
+        self.u = ctrl_signal
 
-	#u(tk) = u(tk−1)+(Kp+Ki∆t+ Kd )e(tk)−(Kp+2Kd )e(tk−1)+ Kd e(tk−2)
-
-	# Discretized Formula for PID Controller
-	# Source: Lecture
-	ctrl_signal = (self.u) 								# u(tk-1)
-	ctrl_signal += (self.Kp + self.Ki * self.dt + self.Kd / self.dt) * t_error	# (Kp + Ki d_t + Kd/d_t) e(tk)
-	ctrl_signal -= (self.Kp + (2 * self.Kd) / self.dt) * self.e1
-	ctrl_signal += (self.Kd / self.dt) * self.e2
-	
-	# Store next stage errors
-	self.e2 = self.e1
-	self.e1 = t_error
-	self.u = ctrl_signal
-        return self.u
-
+        return self.u 
+	       
 class PIDAgent(SparkAgent):
     def __init__(self, simspark_ip='localhost',
                  simspark_port=3100,
