@@ -32,6 +32,7 @@ class AngleInterpolationAgent(PIDAgent):
                  sync_mode=True):
         super(AngleInterpolationAgent, self).__init__(simspark_ip, simspark_port, teamname, player_id, sync_mode)
         self.keyframes = ([], [], [])
+	self.stime = None
 
     def think(self, perception):
         target_joints = self.angle_interpolation(self.keyframes, perception)
@@ -40,9 +41,51 @@ class AngleInterpolationAgent(PIDAgent):
 
     def angle_interpolation(self, keyframes, perception):
         target_joints = {}
-        # YOUR CODE HERE
 
+        if self.start_time == None:
+            self.start_time = perception.time
+
+        (names, times, keys) = keyframes
+        stime = perception.time - self.stime
+
+        for i in range(len(names)):
+            joint = names[i]
+            time = times[i]
+            key = keys[i]
+
+            if joint in self.joint_names:
+                for j in range(len(time) - 1):
+                    if stime < time[0] and j == 0:
+                        t0 = 0.0
+                        t3 = time[0]
+                        p0 = perception.joint[joint]
+                        p3 = key[0][0]
+                    elif time[j] < start_time < time[j+1]:
+                        t0 = time[j]
+                        t3 = time[j+1]
+                        p0 = key[j][0]
+                        p3 = key[j+1][0]
+                    else:
+                        continue
+
+                    p1 = key[j][1][1] + p0
+                    p2 = key[j][2][1] + p3
+                    t1 = key[j][1][2] + t0
+                    t2 = key[j][2][2] + t3
+
+                    t = (stime - t0) / (t3 - t0)
+
+                    target_joints[joint] = self.bezier_algorithm(p0, p1, p2, p3, t)
         return target_joints
+
+    @staticmethod
+    def bezier_algorithm(self, p0, p1, p2, p3, t):
+    	fact0 = (1 - t)**3
+        fact1 = 3 * (1 - t)**2 * t
+        fact2 = 3 * (1 - t) * t**2
+	fact3 = t**3
+
+        return (fact0 * p0) + (fact1 * p1) + (fact2 * p2) + (fact3 * p3)
 
 if __name__ == '__main__':
     agent = AngleInterpolationAgent()
