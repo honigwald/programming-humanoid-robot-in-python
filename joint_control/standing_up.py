@@ -18,13 +18,12 @@ class StandingUpAgent(PostureRecognitionAgent):
         posture = self.posture
         
         # YOUR CODE HERE
-        if posture == "Back" and self.lock == 0:
-			self.keyframes = leftBackToStand()
-			self.lock = 1
+	# SOMETHING STRANGE HAPPENS HERE
+	if posture == "Back":
+		self.keyframes = leftBackToStand()
         
-        if posture == "Belly" and self.lock == 0:
-            self.keyframes = rightBellyToStand()
-            self.lock = 1
+        if posture == "Belly":
+		self.keyframes = rightBellyToStand()
             
 class TestStandingUpAgent(StandingUpAgent):
     '''this agent turns off all motor to falls down in fixed cycles
