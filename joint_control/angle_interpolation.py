@@ -21,7 +21,7 @@
 
 
 from pid import PIDAgent
-from keyframes import hello
+from keyframes import hello, leftBackToStand, leftBellyToStand
 
 
 class AngleInterpolationAgent(PIDAgent):
@@ -42,8 +42,8 @@ class AngleInterpolationAgent(PIDAgent):
     def angle_interpolation(self, keyframes, perception):
         target_joints = {}
 
-        if self.start_time == None:
-            self.start_time = perception.time
+        if self.stime == None:
+            self.stime = perception.time
 
         (names, times, keys) = keyframes
         stime = perception.time - self.stime
@@ -60,7 +60,7 @@ class AngleInterpolationAgent(PIDAgent):
                         t3 = time[0]
                         p0 = perception.joint[joint]
                         p3 = key[0][0]
-                    elif time[j] < start_time < time[j+1]:
+                    elif time[j] < stime < time[j+1]:
                         t0 = time[j]
                         t3 = time[j+1]
                         p0 = key[j][0]
@@ -79,7 +79,7 @@ class AngleInterpolationAgent(PIDAgent):
         return target_joints
 
     @staticmethod
-    def bezier_algorithm(self, p0, p1, p2, p3, t):
+    def bezier_algorithm(p0, p1, p2, p3, t):
     	fact0 = (1 - t)**3
         fact1 = 3 * (1 - t)**2 * t
         fact2 = 3 * (1 - t) * t**2
@@ -89,5 +89,5 @@ class AngleInterpolationAgent(PIDAgent):
 
 if __name__ == '__main__':
     agent = AngleInterpolationAgent()
-    agent.keyframes = hello()  # CHANGE DIFFERENT KEYFRAMES
+    agent.keyframes = leftBellyToStand()  # CHANGE DIFFERENT KEYFRAMES
     agent.run()
