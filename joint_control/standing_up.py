@@ -15,14 +15,17 @@ class StandingUpAgent(PostureRecognitionAgent):
         return super(StandingUpAgent, self).think(perception)
     
     def standing_up(self):
-        posture = self.posture
+        posture = 'unknown'
         
         # YOUR CODE HERE
 	# SOMETHING STRANGE HAPPENS HERE
-	if posture == "Back":
+	if posture == "Belly":
+		self.keyframes = leftBellyToStand()
+	elif posture == "Left" or posture == "Back":
 		self.keyframes = leftBackToStand()
-        
-        if posture == "Belly":
+	elif posture == "Right" or posture == "Frog" or posture == "Sit":
+		self.keyframes = rightBackToStand()
+	else: 
 		self.keyframes = rightBellyToStand()
             
 class TestStandingUpAgent(StandingUpAgent):

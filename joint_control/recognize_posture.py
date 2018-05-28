@@ -27,17 +27,19 @@ features = [
 	'AngleX', 
 	'AngleY'
 ]
+
 robot_pose = {
 	0: 'Back',
 	1: 'Belly',
 	2: 'Crouch',
-	3: 'HeadBack',
-	4: 'Knee',
-	5: 'Left',
-	6: 'Right',
-	7: 'Sit',
-	8: 'Stand',
-	9: 'StandInit'
+	3: 'Frog',
+	4: 'HeadBack',
+	5: 'Knee',
+	6: 'Left',
+	7: 'Right',
+	8: 'Sit',
+	9: 'Stand',
+	10: 'StandInit'
 }
 
 class PostureRecognitionAgent(AngleInterpolationAgent):
@@ -75,5 +77,5 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
 
 if __name__ == '__main__':
     agent = PostureRecognitionAgent()
-    agent.keyframes = rightBackToStand()  # CHANGE DIFFERENT KEYFRAMES
+    agent.keyframes = leftBackToStand()  # CHANGE DIFFERENT KEYFRAMES
     agent.run()
