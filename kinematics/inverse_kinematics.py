@@ -12,6 +12,7 @@
 
 from forward_kinematics import ForwardKinematicsAgent
 from numpy.matlib import identity
+import numpy as np
 
 
 class InverseKinematicsAgent(ForwardKinematicsAgent):
@@ -24,6 +25,31 @@ class InverseKinematicsAgent(ForwardKinematicsAgent):
         '''
         joint_angles = []
         # YOUR CODE HERE
+	### numerical solution with jacobian matrix
+	lambda_ = 1
+	max_step = 0.1
+	
+	target = matrix([transform])
+
+	def inverse_kinematics(x_e, y_e, theta_e, theta):
+	    for i in range(1000):
+	        Ts = forward_kinematics(T0, l, theta)
+	        Te = matrix([from_trans(Ts[-1])]).T
+	        e = target - Te
+	        e[e > max_step] = max_step
+	        e[e < -max_step] = -max_step
+	        T = matrix([from_trans(i) for i in Ts[1:-1]]).T
+	        J = Te - T
+	        dT = Te - T
+	        J[0, :] = -dT[1, :] # x
+	        J[1, :] = dT[0, :] # y
+	        J[-1, :] = 1  # angular
+	        d_theta = lambda_ * pinv(J) * e
+	        theta += asarray(d_theta.T)[0]
+	        if  linalg.norm(d_theta) < 1e-4:
+	            break
+	    return theta
+
         return joint_angles
 
     def set_transforms(self, effector_name, transform):
@@ -31,6 +57,11 @@ class InverseKinematicsAgent(ForwardKinematicsAgent):
         '''
         # YOUR CODE HERE
         self.keyframes = ([], [], [])  # the result joint angles have to fill in
+
+
+    def from_trans(m):
+    	'''get x, y, theta from transform matrix'''
+        return [m[0, -1], m[1, -1], np.atan2(m[1, 0], m[0, 0])]
 
 if __name__ == '__main__':
     agent = InverseKinematicsAgent()
