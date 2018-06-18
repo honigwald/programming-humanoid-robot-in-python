@@ -16,30 +16,30 @@ import pickle
 import numpy as np
 
 features = [
-	'LHipYawPitch', 
-	'LHipRoll', 
-	'LHipPitch', 
-	'LKneePitch', 
-	'RHipYawPitch', 
-	'RHipRoll', 
-	'RHipPitch', 
-	'RKneePitch', 
-	'AngleX', 
-	'AngleY'
+        'LHipYawPitch', 
+        'LHipRoll', 
+        'LHipPitch', 
+        'LKneePitch', 
+        'RHipYawPitch', 
+        'RHipRoll', 
+        'RHipPitch', 
+        'RKneePitch', 
+        'AngleX', 
+        'AngleY'
 ]
 
 robot_pose = {
-	0: 'Back',
-	1: 'Belly',
-	2: 'Crouch',
-	3: 'Frog',
-	4: 'HeadBack',
-	5: 'Knee',
-	6: 'Left',
-	7: 'Right',
-	8: 'Sit',
-	9: 'Stand',
-	10: 'StandInit'
+        0: 'Back',
+        1: 'Belly',
+        2: 'Crouch',
+        3: 'Frog',
+        4: 'HeadBack',
+        5: 'Knee',
+        6: 'Left',
+        7: 'Right',
+        8: 'Sit',
+        9: 'Stand',
+        10: 'StandInit'
 }
 
 class PostureRecognitionAgent(AngleInterpolationAgent):
@@ -61,17 +61,17 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
 
     def recognize_posture(self, perception):
         # YOUR CODE HERE
-	data = []
-	for feature in self.features:
-		if feature == 'AngleX':
-			data.append(perception.imu[0])
-		elif feature == 'AngleY':
-			data.append(perception.imu[1])
-		else:
-			data.append(perception.joint[feature])
+        data = []
+        for feature in self.features:
+                if feature == 'AngleX':
+                        data.append(perception.imu[0])
+                elif feature == 'AngleY':
+                        data.append(perception.imu[1])
+                else:
+                        data.append(perception.joint[feature])
 	
-	predict = self.posture_classifier.predict(np.array(data).reshape(1, -1))
-	posture = self.robot_pose[predict[0]]
+        predict = self.posture_classifier.predict(np.array(data).reshape(1, -1))
+        posture = self.robot_pose[predict[0]]
 
         return posture
 

@@ -32,7 +32,7 @@ class AngleInterpolationAgent(PIDAgent):
                  sync_mode=True):
         super(AngleInterpolationAgent, self).__init__(simspark_ip, simspark_port, teamname, player_id, sync_mode)
         self.keyframes = ([], [], [])
-	self.stime = None
+        self.stime = None
 
     def think(self, perception):
         target_joints = self.angle_interpolation(self.keyframes, perception)
@@ -80,10 +80,10 @@ class AngleInterpolationAgent(PIDAgent):
 
     @staticmethod
     def bezier_algorithm(p0, p1, p2, p3, t):
-    	fact0 = (1 - t)**3
+        fact0 = (1 - t)**3
         fact1 = 3 * (1 - t)**2 * t
         fact2 = 3 * (1 - t) * t**2
-	fact3 = t**3
+        fact3 = t**3
 
         return (fact0 * p0) + (fact1 * p1) + (fact2 * p2) + (fact3 * p3)
 
