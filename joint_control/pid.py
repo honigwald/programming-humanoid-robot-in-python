@@ -18,7 +18,6 @@ import numpy as np
 from collections import deque
 from spark_agent import SparkAgent, JOINT_CMD_NAMES
 
-
 class PIDController(object):
     '''a discretized PID controller, it controls an array of servos,
        e.g. input is an array and output is also an array
@@ -53,14 +52,13 @@ class PIDController(object):
         @return control signal
         '''
         e0 = target - sensor
-        
+
         # Discretized Formula for PID Controller
         # Source: Lecture
         ctrl_signal = (self.u)
         ctrl_signal += (self.Kp + self.Ki * self.dt + self.Kd / self.dt) * e0		# P
         ctrl_signal -= (self.Kp + (2 * self.Kd) / self.dt) * self.e1			# I
-        ctrl_signal += (self.Kd / self.dt) * self.e2					# D
-
+        ctrl_signal += (self.Kd / self.dt) * self.e2                                    # D
 
         # Store next stage errors
         self.e2 = self.e1
@@ -68,7 +66,7 @@ class PIDController(object):
         self.u = ctrl_signal
 
         return self.u 
-	       
+
 class PIDAgent(SparkAgent):
     def __init__(self, simspark_ip='localhost',
                  simspark_port=3100,

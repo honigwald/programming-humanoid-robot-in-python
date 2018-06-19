@@ -25,7 +25,7 @@ class StandingUpAgent(PostureRecognitionAgent):
                 self.keyframes = leftBackToStand()
         elif posture == "Right" or posture == "Frog" or posture == "Sit":
                 self.keyframes = rightBackToStand()
-        else: 
+        else:
                 self.keyframes = rightBellyToStand()
             
 class TestStandingUpAgent(StandingUpAgent):
@@ -52,7 +52,6 @@ class TestStandingUpAgent(StandingUpAgent):
             self.stiffness_on_off_time = time_now
 
         return action
-
 
 if __name__ == '__main__':
     agent = TestStandingUpAgent()

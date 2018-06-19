@@ -16,15 +16,15 @@ import pickle
 import numpy as np
 
 features = [
-        'LHipYawPitch', 
-        'LHipRoll', 
-        'LHipPitch', 
-        'LKneePitch', 
-        'RHipYawPitch', 
-        'RHipRoll', 
-        'RHipPitch', 
-        'RKneePitch', 
-        'AngleX', 
+        'LHipYawPitch',
+        'LHipRoll',
+        'LHipPitch',
+        'LKneePitch',
+        'RHipYawPitch',
+        'RHipRoll',
+        'RHipPitch',
+        'RKneePitch',
+        'AngleX',
         'AngleY'
 ]
 
@@ -49,11 +49,10 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
                  player_id=0,
                  sync_mode=True):
         super(PostureRecognitionAgent, self).__init__(simspark_ip, simspark_port, teamname, player_id, sync_mode)
-	self.features = features
-	self.robot_pose = robot_pose
+        self.features = features
+        self.robot_pose = robot_pose
         self.posture = 'unknown'
-	self.posture_classifier = pickle.load(open("robot_pose.pkl"))
-
+        self.posture_classifier = pickle.load(open("robot_pose.pkl"))
 
     def think(self, perception):
         self.posture = self.recognize_posture(perception)
@@ -69,7 +68,7 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
                         data.append(perception.imu[1])
                 else:
                         data.append(perception.joint[feature])
-	
+
         predict = self.posture_classifier.predict(np.array(data).reshape(1, -1))
         posture = self.robot_pose[predict[0]]
 
