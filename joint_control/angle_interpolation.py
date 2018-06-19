@@ -19,10 +19,8 @@
     # preceding the point, the second describes the curve following the point.
 '''
 
-
 from pid import PIDAgent
 from keyframes import hello, leftBackToStand, leftBellyToStand
-
 
 class AngleInterpolationAgent(PIDAgent):
     def __init__(self, simspark_ip='localhost',

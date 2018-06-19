@@ -56,8 +56,8 @@ class PIDController(object):
         # Discretized Formula for PID Controller
         # Source: Lecture
         ctrl_signal = (self.u)
-        ctrl_signal += (self.Kp + self.Ki * self.dt + self.Kd / self.dt) * e0		# P
-        ctrl_signal -= (self.Kp + (2 * self.Kd) / self.dt) * self.e1			# I
+        ctrl_signal += (self.Kp + self.Ki * self.dt + self.Kd / self.dt) * e0           # P
+        ctrl_signal -= (self.Kp + (2 * self.Kd) / self.dt) * self.e1                    # I
         ctrl_signal += (self.Kd / self.dt) * self.e2                                    # D
 
         # Store next stage errors
@@ -65,7 +65,7 @@ class PIDController(object):
         self.e1 = e0
         self.u = ctrl_signal
 
-        return self.u 
+        return self.u
 
 class PIDAgent(SparkAgent):
     def __init__(self, simspark_ip='localhost',
@@ -86,7 +86,7 @@ class PIDAgent(SparkAgent):
         self.target_joints: target positions (dict: joint_id -> position (target)) '''
         joint_angles = np.asarray(
             [perception.joint[joint_id]  for joint_id in JOINT_CMD_NAMES])
-        target_angles = np.asarray([self.target_joints.get(joint_id, 
+        target_angles = np.asarray([self.target_joints.get(joint_id,
             perception.joint[joint_id]) for joint_id in JOINT_CMD_NAMES])
         u = self.joint_controller.control(target_angles, joint_angles)
         action.speed = dict(zip(JOINT_CMD_NAMES.iterkeys(), u))  # dict: joint_id -> speed

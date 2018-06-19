@@ -13,10 +13,9 @@ class StandingUpAgent(PostureRecognitionAgent):
     def think(self, perception):
         self.standing_up()
         return super(StandingUpAgent, self).think(perception)
-    
+
     def standing_up(self):
         posture = 'unknown'
-        
         # YOUR CODE HERE
         # SOMETHING STRANGE HAPPENS HERE
         if posture == "Belly":
@@ -27,7 +26,7 @@ class StandingUpAgent(PostureRecognitionAgent):
                 self.keyframes = rightBackToStand()
         else:
                 self.keyframes = rightBellyToStand()
-            
+
 class TestStandingUpAgent(StandingUpAgent):
     '''this agent turns off all motor to falls down in fixed cycles
     '''
