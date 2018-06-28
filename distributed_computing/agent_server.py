@@ -16,8 +16,10 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'kinematics'))
 
-from inverse_kinematics import InverseKinematicsAgent
 
+import xmlrpclib
+from SimpleXMLRPCServer import SimpleXMLRPCServer
+from inverse_kinematics import InverseKinematicsAgent
 
 class ServerAgent(InverseKinematicsAgent):
     '''ServerAgent provides RPC service
@@ -27,33 +29,53 @@ class ServerAgent(InverseKinematicsAgent):
     def get_angle(self, joint_name):
         '''get sensor value of given joint'''
         # YOUR CODE HERE
+        return self.perception.joint[joint_name]
     
     def set_angle(self, joint_name, angle):
         '''set target angle of joint for PID controller
         '''
         # YOUR CODE HERE
+        self.perception.joint[joint_name] = angle
 
     def get_posture(self):
         '''return current posture of robot'''
         # YOUR CODE HERE
+        return self.recognize_posture()
 
     def execute_keyframes(self, keyframes):
         '''excute keyframes, note this function is blocking call,
         e.g. return until keyframes are executed
         '''
         # YOUR CODE HERE
+        self.angle_interpolation(keyframes,self.perception)
 
     def get_transform(self, name):
         '''get transform with given name
         '''
-        # YOUR CODE HERE
+        # YOUR CODE HERE 
+        return self.forward_kinematics(name)
 
     def set_transform(self, effector_name, transform):
         '''solve the inverse kinematics and control joints use the results
         '''
         # YOUR CODE HERE
+        transform = self.inverse_kinematics(effector_name,transform)
+
 
 if __name__ == '__main__':
     agent = ServerAgent()
+
+    server = SimpleXMLRPCServer(("localhost", 8080))
+    print "Listening on port 8080..."
+    server.register_instance(agent)
+    server.register_function(get_angle, "get_angle")
+    server.register_function(set_angle, "set_angle")
+    server.register_function(get_posture, "get_posture")
+    server.register_function(execute_keyframes, "execute_keyframes")
+    server.register_function(get_transform, "get_transform")
+    server.register_function(set_transform, "set_transform")
+
+    server.serve_forever()
+
     agent.run()
 
